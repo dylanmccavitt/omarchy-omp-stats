@@ -110,7 +110,7 @@ This plugin starts the bundled `bin/stats-json` bridge, which executes the local
 - Read raw session files
 - Store a second copy of usage data
 - Make network requests
-- Use `sudo`, `pkexec`, system services, or install hooks
+- Request elevated privileges, manage system services, or run install hooks
 
 OMP may synchronize sessions or contact configured providers as part of its own normal behavior. That remains governed by OMP's configuration.
 
