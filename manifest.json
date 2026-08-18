@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.dylanmccavitt.omp-stats",
+  "name": "OMP Stats",
+  "version": "0.1.0",
+  "author": "Dylan McCavitt",
+  "license": "MIT",
+  "description": "Theme-aware OMP request, token, cache, cost, and model-performance statistics in the Omarchy bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "OMP Stats",
+    "description": "Live OMP totals in the bar plus native preference, request-trend, and performance views.",
+    "category": "AI",
+    "defaultSection": "right",
+    "aliases": [
+      "omp-stats",
+      "pi-stats",
+      "ai-stats"
+    ],
+    "allowMultiple": false,
+    "defaults": {
+      "refreshIntervalSec": 300,
+      "barDisplay": "Requests and cost"
+    },
+    "schema": [
+      {
+        "key": "barDisplay",
+        "type": "enum",
+        "label": "Bar display",
+        "options": [
+          "Requests and cost",
+          "Requests",
+          "Cost",
+          "Logo only"
+        ],
+        "defaultValue": "Requests and cost",
+        "description": "Metric shown beside the OMP mark. Vertical bars show request count for the combined option."
+      },
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 60,
+        "max": 3600,
+        "step": 60,
+        "defaultValue": 300
+      }
+    ]
+  }
+}
