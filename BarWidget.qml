@@ -13,7 +13,7 @@ BarWidget {
   readonly property bool popoutSwitchClosing:
     panelItem ? panelItem.popoutSwitchClosing === true : false
   readonly property bool alarming:
-    panelItem ? panelItem.alarming || (panelItem.errorText !== "" && !panelItem.overall) : false
+    panelItem ? panelItem.alarming || panelItem.errorText !== "" : false
   readonly property string metricText: panelItem ? panelItem.barMetricText : "…"
   readonly property string metricTooltip: panelItem ? panelItem.barTooltip() : "OMP Stats"
 
