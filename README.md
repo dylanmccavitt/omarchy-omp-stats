@@ -44,6 +44,8 @@ No fixed home directory, plugin directory, OMP version, `jq`, or Python package 
 
 ## Install
 
+Open the [OMP Stats listing on Omarchy Plugins](https://omarchyplugins.com/plugin.html?id=io.github.dylanmccavitt.omp-stats) to review its checked commit and compatibility status, then copy the current install command. Or install directly:
+
 ```bash
 omarchy plugin add https://github.com/dylanmccavitt/omarchy-omp-stats.git --enable
 ```
