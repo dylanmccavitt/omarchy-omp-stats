@@ -63,6 +63,30 @@ assert.equal(report.overall.totalRequests, 10)
 assert.equal(Model.parse("  "), null)
 assert.throws(() => Model.parse("not json"), /no JSON object/)
 assert.throws(() => Model.parse("{}"), /invalid stats report/)
+assert.throws(() => Model.parse('{"overall": }'))
+
+const degradedReport = Model.parse(JSON.stringify({
+  overall: { unknownMetric: "ignored" },
+  byModel: null,
+  byFolder: {},
+  byAgentType: "invalid",
+  timeSeries: false,
+  modelSeries: 1,
+  modelPerformanceSeries: null,
+  unknownSection: [{ value: 1 }]
+}))
+assert.deepEqual(degradedReport.byModel, [])
+assert.deepEqual(degradedReport.byFolder, [])
+assert.deepEqual(degradedReport.byAgentType, [])
+assert.deepEqual(degradedReport.timeSeries, [])
+assert.deepEqual(degradedReport.modelSeries, [])
+assert.deepEqual(degradedReport.modelPerformanceSeries, [])
+assert.deepEqual(Model.modelRows(degradedReport), [])
+assert.deepEqual(Model.folderRows(degradedReport), [])
+assert.deepEqual(Model.agentRows(degradedReport), [])
+assert.deepEqual(Model.activityRows(degradedReport), [])
+assert.deepEqual(Model.modelPreference(degradedReport, [], 24), { models: [], points: [] })
+assert.equal(Model.barMetric(degradedReport, "Requests and cost", false, ""), "0 · $0")
 
 const rows = Model.modelRows(report)
 assert.deepEqual(rows.map(row => row.name), ["alpha", "beta"])

@@ -34,6 +34,7 @@ Panel {
   property string errorText: ""
   property bool loading: false
   property bool pendingRefresh: false
+  property bool refreshStopExpected: false
   property double refreshedAt: 0
   property double nowMs: Date.now()
   property int themeRevision: 0
@@ -87,7 +88,7 @@ Panel {
   }
 
   function refresh() {
-    if (statsProcess.running) {
+    if (statsProcess.running || refreshStopExpected) {
       pendingRefresh = true
       return
     }
@@ -95,6 +96,16 @@ Panel {
     errorText = ""
     statsProcess.command = ["bash", statsScript]
     statsProcess.running = true
+    refreshTimeoutTimer.restart()
+  }
+
+  function timeoutRefresh() {
+    if (!statsProcess.running) return
+    pendingRefresh = false
+    refreshStopExpected = true
+    loading = false
+    errorText = "OMP stats refresh timed out after 120 seconds; run omp stats --json directly"
+    statsProcess.running = false
   }
 
   function refreshIfStale() {
@@ -188,6 +199,18 @@ Panel {
     }
 
     onExited: function(exitCode) {
+      refreshTimeoutTimer.stop()
+
+      if (root.refreshStopExpected) {
+        root.refreshStopExpected = false
+        root.loading = false
+        if (root.pendingRefresh) {
+          root.pendingRefresh = false
+          Qt.callLater(root.refresh)
+        }
+        return
+      }
+
       root.loading = false
       var output = String(statsStdout.text || "")
       var detail = String(statsStderr.text || "").trim()
@@ -211,6 +234,13 @@ Panel {
         Qt.callLater(root.refresh)
       }
     }
+  }
+
+  Timer {
+    id: refreshTimeoutTimer
+    interval: 120000
+    repeat: false
+    onTriggered: root.timeoutRefresh()
   }
 
   Timer {

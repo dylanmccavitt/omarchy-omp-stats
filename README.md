@@ -29,8 +29,8 @@ The screenshots use synthetic usage data and contain no account or session infor
 
 ## Requirements
 
-- Omarchy Quattro with third-party `bar-widget` support
-- Bash
+- Current stable Omarchy Quattro with third-party `bar-widget` support; verified with Omarchy 4.0.0-1
+- Bash and GNU `timeout`, both included with Omarchy
 - OMP with `omp stats --json` support; verified with OMP 17.3.7
 
 The bundled bridge resolves OMP in this order:
@@ -61,6 +61,17 @@ omarchy bar move io.github.dylanmccavitt.omp-stats --section right
 ```bash
 omarchy plugin update io.github.dylanmccavitt.omp-stats
 ```
+
+New installations clone the current `main` branch. Existing installations remain on their current commit until an update is requested; Omarchy presents the diff for confirmation, validates the fast-forward, and rolls back if validation fails. Manifest versions and GitHub tags document releases but do not pin Omarchy's installer or updater.
+
+## Releases and roadmap
+
+- [Releases](https://github.com/dylanmccavitt/omarchy-omp-stats/releases) contain tested compatibility baselines, user-visible changes, and rollback anchors.
+- [Milestones](https://github.com/dylanmccavitt/omarchy-omp-stats/milestones) are the canonical roadmap.
+- Compatible feature work is batched into at most one minor release per month; empty months are skipped.
+- Tested regression, compatibility, and security/privacy fixes may ship as patch releases sooner.
+
+Runtime changes stay off `main` until their release is ready. Documentation-only changes do not require a manifest version bump. The marketplace checks upstream on its own schedule, so its displayed version and checked commit can briefly lag the repository.
 
 ## Configure
 
@@ -134,7 +145,7 @@ From the repository root:
 omarchy plugin validate .
 node Model.test.js
 bash stats-json.test.sh
-qmllint -I "$OMARCHY_PATH/shell" BarWidget.qml Panel.qml
+/usr/lib/qt6/bin/qmllint -I "$OMARCHY_PATH/shell" BarWidget.qml Panel.qml
 ```
 
 Runtime checks:

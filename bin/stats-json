@@ -43,8 +43,12 @@ if ! omp_bin="$(find_omp)"; then
   exit 127
 fi
 
-raw="$("$omp_bin" stats --json)"
+raw="$(timeout --kill-after=5s 115s "$omp_bin" stats --json)"
 status=$?
+if (( status == 124 || status == 137 )); then
+  printf 'OMP stats refresh timed out while running %s stats --json.\n' "$omp_bin" >&2
+  exit 124
+fi
 if (( status != 0 )); then
   printf 'OMP Stats could not run %s stats --json (exit %d).\n' "$omp_bin" "$status" >&2
   exit "$status"
