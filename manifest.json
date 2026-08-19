@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.dylanmccavitt.omp-stats",
   "name": "OMP Stats",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Dylan McCavitt",
   "license": "MIT",
   "description": "Theme-aware OMP request, token, cache, cost, and model-performance statistics in the Omarchy bar.",
