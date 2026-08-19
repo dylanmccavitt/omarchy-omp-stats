@@ -53,6 +53,8 @@ Panel {
   readonly property string barDisplay: String(setting("barDisplay", "Requests and cost"))
   readonly property string barMetricText:
     Model.barMetric(report, barDisplay, verticalBar, errorText)
+  readonly property string lastRefreshLabel: refreshedAt > 0
+    ? Qt.formatDateTime(new Date(refreshedAt), "MMM d, HH:mm") : ""
 
   function setting(name, fallback) {
     var value = settings ? settings[name] : undefined
@@ -119,10 +121,26 @@ Panel {
       + Model.relativeTime(overall.lastTimestamp, nowMs)
   }
 
+  function refreshStatusLabel() {
+    if (loading) {
+      return lastRefreshLabel !== ""
+        ? "Refreshing · showing data from " + lastRefreshLabel : "Refreshing"
+    }
+    if (errorText !== "") {
+      return lastRefreshLabel !== ""
+        ? "Update failed · showing data from " + lastRefreshLabel : "Update failed"
+    }
+    return lastRefreshLabel !== "" ? "Updated " + lastRefreshLabel : "Not updated"
+  }
+
   function barTooltip() {
-    if (!overall) return errorText !== "" ? errorText : "OMP Stats"
+    if (!overall) {
+      if (errorText !== "") return errorText
+      return "OMP Stats · " + refreshStatusLabel()
+    }
     return "OMP Stats · " + Model.formatCost(overall.totalCost)
       + " · " + Model.formatCount(overall.totalRequests) + " requests"
+      + " · " + refreshStatusLabel()
   }
 
   function open() { root.controller.show() }
@@ -596,7 +614,8 @@ Panel {
 
           Text {
             width: parent.width
-            text: "G details · R refresh · " + Math.round(root.refreshIntervalSec / 60) + "m auto"
+            text: root.refreshStatusLabel() + " · G details · R refresh · "
+              + Math.round(root.refreshIntervalSec / 60) + "m auto"
             color: root.dim
             font.family: root.fontFamily
             font.pixelSize: Style.font.caption

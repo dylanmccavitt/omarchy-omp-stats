@@ -25,7 +25,7 @@ The screenshots use synthetic usage data and contain no account or session infor
 - Expandable model details plus project, agent-type, and recent-activity breakdowns
 - Live Omarchy colors, fonts, spacing, and light/dark theme changes
 - Configurable bar metric and 60–3600 second refresh interval
-- Last valid report remains visible when a refresh fails
+- Last valid report remains visible when a refresh fails, with last-refresh and stale-data status
 
 ## Requirements
 
